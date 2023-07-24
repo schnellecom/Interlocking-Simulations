@@ -2,8 +2,8 @@
 
 
 # set parameters for later use
-jobName = "script-run-1"
-modelName = "two-cubes"
+jobName = "interlocking-1"
+modelName = "i1"
 
 from abaqus import *
 from abaqusConstants import *
@@ -35,7 +35,7 @@ import sys
 sys.path.insert(6, 
     r'/usr/SIMULIA/EstProducts/2023/linux_a64/code/python2.7/lib/abaqus_plugins/stlImport')
 import stl2inp
-stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/two-cubes.stl', 
+stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/interlocking-1.stl', 
     modelName=modelName, mergeNodesTolerance=1E-06)
 
 # remove old model
@@ -156,4 +156,4 @@ mdb.jobs[jobName].setValues(numThreadsPerMpiProcess=1, numCpus=4,
 
 
 # submit the job
-mdb.jobs[jobName].submit(consistencyChecking=OFF)
+# mdb.jobs[jobName].submit(consistencyChecking=OFF)

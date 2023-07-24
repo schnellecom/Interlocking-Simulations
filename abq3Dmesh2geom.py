@@ -1,19 +1,21 @@
 # python script for abaqus to create geometry from 3D Orphan mesh
 # 2012/05 Rupert Feldbacher - Graz University of Technology
 from abaqusConstants import *
+
+moname = 'i1'
+paname = 'PART-1'
+intfacYN = 'N'
+cellsYN = 'N'
+setsYN = 'N'
+
 ######## Getting input and creating temporary parts
-# fields = (('Modelname:','two-cubes'), ('Partname:', 'PART-1'), 
+# fields = (('Modelname:','i1'), ('Partname:', 'PART-1'), 
 #     ('Keep internal faces (Y/N) ?','N'),('Try to add cells (Y/N) ?','N'), 
 #     ('Try to keep sets/surfaces (Y/N) ?','N'))
 # moname, paname, intfacYN, cellsYN, setsYN = getInputs(
 #     fields=fields, label='Specify Model and Part:', 
 #     dialogTitle='Create geometry from Orphan Mesh', )
 
-moname = 'two-cubes'
-paname = 'PART-1'
-intfacYN = 'N'
-cellsYN = 'N'
-setsYN = 'N'
 
 xmodel=mdb.models[moname]
 wpart=xmodel.parts[paname]
