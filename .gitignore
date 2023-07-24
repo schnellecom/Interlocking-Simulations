@@ -9,5 +9,5 @@ abaqus.rpy*
 *.msg
 *.prt
 *.sta
-
+*.rec
 *.txt
