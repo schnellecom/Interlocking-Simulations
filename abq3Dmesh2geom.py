@@ -49,7 +49,7 @@ for i in range (0,len(e)):
         l=0
         m=m+1
         print i+1,' of ',len(e),' wires completed'
-        session.viewports[session.currentViewportName].view.fitView(drawImmediately=TRUE)
+        # session.viewports[session.currentViewportName].view.fitView(drawImmediately=TRUE)
 print '100% of wires completed'
 session.viewports[session.currentViewportName].view.fitView(drawImmediately=TRUE)
 ######### create faces
@@ -95,7 +95,7 @@ for i in range (0,len(e)):
         l=0
         m=m+1
         print i+1,' of ',len(e),' faces completed'
-        session.viewports[session.currentViewportName].forceRefresh()
+        # session.viewports[session.currentViewportName].forceRefresh()
 # try again after rest of faces has been completed
 o=0
 if len(n) > 0:
