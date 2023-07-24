@@ -1,0 +1,13 @@
+abaqus.rpy*
+*.exception
+*.com
+*.dat
+*.env
+*.ipm
+*.jnl
+*.log
+*.msg
+*.prt
+*.sta
+
+*.txt
