@@ -11,3 +11,15 @@ abaqus.rpy*
 *.sta
 *.rec
 *.txt
+
+*.023
+*.SMABulk
+*.cid
+*.lck
+*.mdl
+*.odb
+*.sim
+*.simdir/
+*.simlog
+*.stt
+
