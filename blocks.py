@@ -99,6 +99,13 @@ region = a1.Set(vertices=verts1, name='Set-2')
 mdb.models['two-cubes'].EncastreBC(name='BC-2', createStepName='Step-1',
     region=region, localCsys=None)
 
+# maybe fix movement of other part as well?
+a = mdb.models['two-cubes'].rootAssembly
+v1 = a.instances['PART-1_geom-1'].vertices
+verts1 = v1.getSequenceFromMask(mask=('[#f00 ]', ), )
+region = a.Set(vertices=verts1, name='Set-3')
+mdb.models['two-cubes'].boundaryConditions['BC-3'].setValues(typeName=ZSYMM)
+
 # mesh part
 p = mdb.models['two-cubes'].parts['PART-1_geom']
 p.seedPart(size=1.0, deviationFactor=0.1, minSizeFactor=0.1)
@@ -147,3 +154,11 @@ mdb.Job(name='script-test', model='two-cubes', description='', type=ANALYSIS,
     modelPrint=OFF, contactPrint=OFF, historyPrint=OFF, userSubroutine='',
     scratch='', resultsFormat=ODB, numThreadsPerMpiProcess=1,
     multiprocessingMode=DEFAULT, numCpus=1, numGPUs=0)
+
+# enable paralellization
+mdb.jobs['script-test'].setValues(numThreadsPerMpiProcess=1, numCpus=4,
+    numDomains=4)
+
+
+# submit the job
+mdb.jobs['script-test'].submit(consistencyChecking=OFF)
