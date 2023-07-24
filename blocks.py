@@ -38,6 +38,9 @@ import stl2inp
 stl2inp.STL2inp(stlfile='/home/data/schnelle/abaqus/two-cubes.stl', 
     modelName=modelName, mergeNodesTolerance=1E-06)
 
+# remove old model
+del mdb.models['Model-1']
+
 # create a material
 mdb.models[modelName].Material(name='high-strength')
 mdb.models[modelName].materials['high-strength'].Elastic(table=((
