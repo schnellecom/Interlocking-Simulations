@@ -2,14 +2,14 @@
 # 2012/05 Rupert Feldbacher - Graz University of Technology
 from abaqusConstants import *
 
-moname = 'i1'
+moname = modelName
 paname = 'PART-1'
 intfacYN = 'N'
 cellsYN = 'N'
 setsYN = 'N'
 
 ######## Getting input and creating temporary parts
-# fields = (('Modelname:','i1'), ('Partname:', 'PART-1'), 
+# fields = (('Modelname:','moname'), ('Partname:', 'PART-1'), 
 #     ('Keep internal faces (Y/N) ?','N'),('Try to add cells (Y/N) ?','N'), 
 #     ('Try to keep sets/surfaces (Y/N) ?','N'))
 # moname, paname, intfacYN, cellsYN, setsYN = getInputs(

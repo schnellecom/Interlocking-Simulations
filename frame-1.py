@@ -2,15 +2,11 @@
 
 
 # set parameters for later use
-jobName = "interlocking-1"
-modelName = "i1"
+jobName = "frame-1"
+modelName = "f1"
 
 from abaqus import *
 from abaqusConstants import *
-session.Viewport(name='Viewport: 1', origin=(0.0, 0.0), width=531.605163574219, 
-    height=325.702056884766)
-session.viewports['Viewport: 1'].makeCurrent()
-session.viewports['Viewport: 1'].maximize()
 from caeModules import *
 from driverUtils import executeOnCaeStartup
 
@@ -27,19 +23,19 @@ from sketch import *
 from visualization import *
 from connectorBehavior import *
 
-executeOnCaeStartup()
-Mdb()
+# executeOnCaeStartup()
+# Mdb()
 
 # import the .stl
 import sys
 sys.path.insert(6, 
     r'/usr/SIMULIA/EstProducts/2023/linux_a64/code/python2.7/lib/abaqus_plugins/stlImport')
 import stl2inp
-stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/interlocking-1.stl', 
+stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/frame-1.stl', 
     modelName=modelName, mergeNodesTolerance=1E-06)
 
 # remove old model
-del mdb.models['Model-1']
+# del mdb.models['Model-1']
 
 # create a material
 mdb.models[modelName].Material(name='high-strength')
@@ -55,16 +51,17 @@ p = mdb.models[modelName].parts['PART-1_geom']
 f = p.faces
 p.AddCells(faceList = f[0:24])
 
-mdb.models[modelName].HomogeneousSolidSection(name='Section-1',
-    material='high-strength', thickness=None)
-p = mdb.models[modelName].parts['PART-1_geom']
-c = p.cells
-cells = c.getSequenceFromMask(mask=('[#3 ]', ), )
-region = p.Set(cells=cells, name='Set-1')
-p = mdb.models[modelName].parts['PART-1_geom']
-p.SectionAssignment(region=region, sectionName='Section-1', offset=0.0,
-    offsetType=MIDDLE_SURFACE, offsetField='',
-    thicknessAssignment=FROM_SECTION)
+#create material and assign it
+# mdb.models[modelName].HomogeneousSolidSection(name='Section-1',
+#     material='high-strength', thickness=None)
+# p = mdb.models[modelName].parts['PART-1_geom']
+# c = p.cells
+# cells = c.getSequenceFromMask(mask=('[#3 ]', ), )
+# region = p.Set(cells=cells, name='Set-1')
+# p = mdb.models[modelName].parts['PART-1_geom']
+# p.SectionAssignment(region=region, sectionName='Section-1', offset=0.0,
+#     offsetType=MIDDLE_SURFACE, offsetField='',
+#     thicknessAssignment=FROM_SECTION)
 
 # make a step
 mdb.models[modelName].StaticStep(name='Step-1', previous='Initial')
@@ -86,23 +83,23 @@ p = mdb.models[modelName].parts['PART-1_geom']
 a2.Instance(name='PART-1_geom-1', part=p, dependent=ON)
 
 # create load
-a1 = mdb.models[modelName].rootAssembly
-s1 = a1.instances['PART-1_geom-1'].faces
-side1Faces1 = s1.findAt(((3.333333, 6.666667, 10.001), ), ((6.666667, 3.333333,
-    10.001), ))
-region = a1.Surface(side1Faces=side1Faces1, name='Surf-6')
-mdb.models[modelName].Pressure(name='Load-2', createStepName='Step-1',
-    region=region, distributionType=UNIFORM, field='', magnitude=100.0,
-    amplitude=UNSET)
+# a1 = mdb.models[modelName].rootAssembly
+# s1 = a1.instances['PART-1_geom-1'].faces
+# side1Faces1 = s1.findAt(((3.333333, 6.666667, 10.001), ), ((6.666667, 3.333333,
+#     10.001), ))
+# region = a1.Surface(side1Faces=side1Faces1, name='Surf-6')
+# mdb.models[modelName].Pressure(name='Load-2', createStepName='Step-1',
+#     region=region, distributionType=UNIFORM, field='', magnitude=100.0,
+#     amplitude=UNSET)
 
 # boundary conditions
-a1 = mdb.models[modelName].rootAssembly
-v1 = a1.instances['PART-1_geom-1'].vertices
-verts1 = v1.findAt(((0.0, 10.0, 0.0), ), ((0.0, 0.0, 0.0), ), ((10.0, 0.0,
-    0.0), ), ((10.0, 10.0, 0.0), ))
-region = a1.Set(vertices=verts1, name='Set-2')
-mdb.models[modelName].EncastreBC(name='BC-2', createStepName='Step-1',
-    region=region, localCsys=None)
+# a1 = mdb.models[modelName].rootAssembly
+# v1 = a1.instances['PART-1_geom-1'].vertices
+# verts1 = v1.findAt(((0.0, 10.0, 0.0), ), ((0.0, 0.0, 0.0), ), ((10.0, 0.0,
+#     0.0), ), ((10.0, 10.0, 0.0), ))
+# region = a1.Set(vertices=verts1, name='Set-2')
+# mdb.models[modelName].EncastreBC(name='BC-2', createStepName='Step-1',
+#     region=region, localCsys=None)
 
 # maybe fix movement of other part as well?
 # a1 = mdb.models['two-cubes'].rootAssembly
