@@ -3,7 +3,7 @@
 
 # set parameters for later use
 jobName = "interlocking-1"
-modelName = "i1"
+modelName = "i1-a"
 
 from abaqus import *
 from abaqusConstants import *
