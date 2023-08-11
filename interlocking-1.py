@@ -68,6 +68,14 @@ mdb.models[modelName].Part('frame', mdb.models['f1'].parts['frame'])
 
 del mdb.models[frameName]
 
+# add models to assembly
+a2 = mdb.models[modelName].rootAssembly
+p = mdb.models[modelName].parts['frame']
+a2.Instance(name='frameName', part=p, dependent=ON)
+p = mdb.models[modelName].parts['interlocking']
+a2.Instance(name='modelName', part=p, dependent=ON)
+
+
 # delete old part from assembly
 a1 = mdb.models[modelName].rootAssembly
 del a1.features['PART-1-1']
