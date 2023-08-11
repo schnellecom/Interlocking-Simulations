@@ -3,7 +3,7 @@
 
 # set parameters for later use
 jobName = "interlocking-1"
-modelName = "i1"
+modelName = "interlocking-1"
 frameName = "f1"
 
 from abaqus import *
@@ -36,7 +36,7 @@ import sys
 sys.path.insert(6, 
     r'/usr/SIMULIA/EstProducts/2023/linux_a64/code/python2.7/lib/abaqus_plugins/stlImport')
 import stl2inp
-stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/i1-e4.stl', 
+stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/i1-e6.stl', 
     modelName=modelName, mergeNodesTolerance=1E-10)
 
 stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/frame-1.stl', 
@@ -56,6 +56,27 @@ backwardCompatibility.setValues(reportDeprecated=False)
 execfile('/home/data/schnelle/Interlocking-Simulations/abq3Dmesh2geom.py', __main__.__dict__)
 
 execfile('/home/data/schnelle/Interlocking-Simulations/abq3Dmesh2geom-frame.py', __main__.__dict__)
+
+# combine models
+del mdb.models[frameName].parts['PART-1']
+del mdb.models[modelName].parts['PART-1']
+
+mdb.models[frameName].parts.changeKey(fromName='PART-1_geom', toName='frame')
+mdb.models[modelName].parts.changeKey(fromName='PART-1_geom', toName='interlocking')
+
+mdb.models[modelName].Part('frame', mdb.models['f1'].parts['frame'])
+
+del mdb.models[frameName]
+
+# delete old part from assembly
+a1 = mdb.models[modelName].rootAssembly
+del a1.features['PART-1-1']
+
+# move frame to right position
+a2 = mdb.models[modelName].rootAssembly
+a2.translate(instanceList=(frameName, ), vector=(-4.0, -4.0, 0.0))
+
+
 
 # p = mdb.models[modelName].parts['PART-1_geom']
 # f = p.faces

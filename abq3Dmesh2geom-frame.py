@@ -16,7 +16,6 @@ setsYN = 'N'
 #     fields=fields, label='Specify Model and Part:', 
 #     dialogTitle='Create geometry from Orphan Mesh', )
 
-print(moname)
 xmodel=mdb.models[moname]
 wpart=xmodel.parts[paname]
 xpart=xmodel.Part(name=paname+'_geom_temp',dimensionality=THREE_D,type=DEFORMABLE_BODY)
