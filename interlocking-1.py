@@ -40,7 +40,7 @@ stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/i1-e4.stl'
     modelName=modelName, mergeNodesTolerance=1E-10)
 
 stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/frame-1.stl', 
-    modelName=modelName, mergeNodesTolerance=1E-10)
+    modelName=frameName, mergeNodesTolerance=1E-10)
 
 # remove old model
 del mdb.models['Model-1']
