@@ -1,4 +1,4 @@
-solid interlocking-1
+solid i1-e4
 	facet normal -0. -0. 1.0000000000000002 
 		outer loop
 			vertex 0.00016999299900000001 2.0000299869989999 -2.2202240046453883e-20 
@@ -447,4 +447,4 @@ solid interlocking-1
 			vertex 1.0001299869989999 0.99973000700100012 1.4140721410168577 
 		endloop
 	endfacet
-endsolid interlocking-1
+endsolid i1-e4

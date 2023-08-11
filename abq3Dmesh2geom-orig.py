@@ -44,14 +44,13 @@ for i in range (0,len(e)):
 print 'wiredata was read'
 # create wire splines for each element edge
 for i in range (0,len(e)):
-    xpart.WireSpline(points=wiredata[i], 
-        mergeType=IMPRINT, smoothClosedSpline=ON)
+    xpart.WireSpline(points=wiredata[i], mergeType=IMPRINT, smoothClosedSpline=ON)
     l=l+1
     if l > e20:
         l=0
         m=m+1
         print i+1,' of ',len(e),' wires completed'
-        # session.viewports[session.currentViewportName].view.fitView(drawImmediately=TRUE)
+        session.viewports[session.currentViewportName].view.fitView(drawImmediately=TRUE)
 print '100% of wires completed'
 session.viewports[session.currentViewportName].view.fitView(drawImmediately=TRUE)
 ######### create faces

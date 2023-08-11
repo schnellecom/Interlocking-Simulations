@@ -2,7 +2,7 @@
 # 2012/05 Rupert Feldbacher - Graz University of Technology
 from abaqusConstants import *
 
-moname = modelName
+moname = frameName
 paname = 'PART-1'
 intfacYN = 'N'
 cellsYN = 'N'
