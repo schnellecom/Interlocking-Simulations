@@ -51,20 +51,20 @@ from abaqus import backwardCompatibility
 backwardCompatibility.setValues(reportDeprecated=False)
 execfile('/home/data/schnelle/Interlocking-Simulations/abq3Dmesh2geom.py', __main__.__dict__)
 
-p = mdb.models[modelName].parts['PART-1_geom']
-f = p.faces
-p.AddCells(faceList = f[0:24])
+# p = mdb.models[modelName].parts['PART-1_geom']
+# f = p.faces
+# p.AddCells(faceList = f[0:24])
 
-mdb.models[modelName].HomogeneousSolidSection(name='Section-1',
-    material='high-strength', thickness=None)
-p = mdb.models[modelName].parts['PART-1_geom']
-c = p.cells
-cells = c.getSequenceFromMask(mask=('[#3 ]', ), )
-region = p.Set(cells=cells, name='Set-1')
-p = mdb.models[modelName].parts['PART-1_geom']
-p.SectionAssignment(region=region, sectionName='Section-1', offset=0.0,
-    offsetType=MIDDLE_SURFACE, offsetField='',
-    thicknessAssignment=FROM_SECTION)
+# mdb.models[modelName].HomogeneousSolidSection(name='Section-1',
+#     material='high-strength', thickness=None)
+# p = mdb.models[modelName].parts['PART-1_geom']
+# c = p.cells
+# cells = c.getSequenceFromMask(mask=('[#3 ]', ), )
+# region = p.Set(cells=cells, name='Set-1')
+# p = mdb.models[modelName].parts['PART-1_geom']
+# p.SectionAssignment(region=region, sectionName='Section-1', offset=0.0,
+#     offsetType=MIDDLE_SURFACE, offsetField='',
+#     thicknessAssignment=FROM_SECTION)
 
 # make a step
 mdb.models[modelName].StaticStep(name='Step-1', previous='Initial')
