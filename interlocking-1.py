@@ -36,10 +36,10 @@ import sys
 sys.path.insert(6, 
     r'/usr/SIMULIA/EstProducts/2023/linux_a64/code/python2.7/lib/abaqus_plugins/stlImport')
 import stl2inp
-stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/i1-e6.stl', 
+stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/i1-e4.stl', 
     modelName=modelName, mergeNodesTolerance=1E-10)
 
-stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/frame-1.stl', 
+stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/frame-1_ascii.stl', 
     modelName=frameName, mergeNodesTolerance=1E-10)
 
 # remove old model
@@ -71,9 +71,9 @@ del mdb.models[frameName]
 # add models to assembly
 a2 = mdb.models[modelName].rootAssembly
 p = mdb.models[modelName].parts['frame']
-a2.Instance(name='frameName', part=p, dependent=ON)
+a2.Instance(name=frameName, part=p, dependent=ON)
 p = mdb.models[modelName].parts['interlocking']
-a2.Instance(name='modelName', part=p, dependent=ON)
+a2.Instance(name=modelName, part=p, dependent=ON)
 
 
 # delete old part from assembly
