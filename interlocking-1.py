@@ -36,7 +36,7 @@ import sys
 sys.path.insert(6, 
     r'/usr/SIMULIA/EstProducts/2023/linux_a64/code/python2.7/lib/abaqus_plugins/stlImport')
 import stl2inp
-stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/i1-e4.stl', 
+stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/i1-e1.stl', 
     modelName=modelName, mergeNodesTolerance=1E-10)
 
 stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/frame-1_ascii.stl', 
