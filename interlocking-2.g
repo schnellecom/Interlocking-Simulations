@@ -3,6 +3,11 @@ Read("FindOuterTriangle.g");
 
 rot90:=[[0,1,0],[-1,0,0],[0,0,1]];;
 
+flipx:=[[-1,0,0],[0,1,0],[0,0,1]];;
+
+flipy:=[[1,0,0],[0,-1,0],[0,0,1]];;
+
+
 coordinates_middle:=[[0,0,0],[2,0,0],[2,-2,0],[0,-2,0]];;
 
 coordinates_up:=[
@@ -13,7 +18,16 @@ coordinates:=Concatenation(coordinates_middle,coordinates_up);;
 
 coordinates:=coordinates*    DiagonalMat([1,1,Sqrt(2.)])-[0,-2,0];;
 
-coordinates:=coordinates*rot90;
+#coordinates:=coordinates+2;
+
+#coordinates:=coordinates*rot90;
+
+# create the orientations of the block and move it to the origin as one of the corners
+brcoords:=coordinates;
+trcoords:=coordinates*rot90+[2,0,0];
+tlcoords:=coordinates*rot90^2+[2,0,0]+[0,2,0];
+blcoords:=coordinates*rot90^3+[0,2,0];
+
 
 #middle connected to upper part
 vof_block:=[
@@ -29,7 +43,6 @@ s:=SimplicialSurfaceByVerticesInFaces(vof_block);;
 pr:=SetVertexCoordinates3D(s,coordinates);;
 
 
-
 x:=5;
 y:=5;
 
@@ -39,12 +52,24 @@ vof_assembly:=[];
 coordinates_assembly:=[];
 
 # create the incidence structure and coordinates
-for i in [1..x-2] do
-	for j in [1..y-2] do
-		vof_assembly:=Concatenation(vof_assembly,vof_block+((y-2)*(i-1)+(j-1))*1*NumberOfVertices(s));
+for i in [2..x-1] do
+	for j in [2..y-1] do
+		vof_assembly:=Concatenation(vof_assembly,vof_block+((y-2)*(i-2)+(j-2))*1*NumberOfVertices(s));
 		
-		coordinates_assembly:=Concatenation(coordinates_assembly,coordinates+[2+a,0,0]*(i)+[0,2+a,0]*(j));
-
+		if i mod 2 = 0 then
+			if j mod 2 = 0 then
+				coordinates_assembly:=Concatenation(coordinates_assembly,brcoords+[2+a,0,0]*(i)+[0,2+a,0]*(j));
+			else
+				coordinates_assembly:=Concatenation(coordinates_assembly,blcoords+[2+a,0,0]*(i)+[0,2+a,0]*(j));
+			fi;
+		else
+			if j mod 2 = 0 then
+				coordinates_assembly:=Concatenation(coordinates_assembly,trcoords+[2+a,0,0]*(i)+[0,2+a,0]*(j));
+			else
+				coordinates_assembly:=Concatenation(coordinates_assembly,tlcoords+[2+a,0,0]*(i)+[0,2+a,0]*(j));
+			fi;
+		fi;
+		#coordinates_assembly:=Concatenation(coordinates_assembly,(coordinates*rot90^(i mod 2)+[0+a,0,0]*(i-1)+[0,0+a,0]*(j-1)));
 	od;
 od;
 
@@ -58,7 +83,7 @@ s_assembly:=SimplicialSurfaceByVerticesInFaces(vof_assembly);;
 #data:=JoinComponents(s_assembly,coordinates_assembly*1.,0.0001);
 #ComponentsOuterHull([data[2],data[1]], "frame-1", 0.0001, false);
 
-ComponentsOuterHull([s_assembly, coordinates_assembly*1.0], "interlocking-1a", 0.0001, false);
+ComponentsOuterHull([s_assembly, coordinates_assembly*1.0], "interlocking-2", 0.0001, false);
 #ComponentsOuterHull([s, coordinates*1.0], "interlocking-1a", 0.0001, false);
 
 #verticesPositions:=coordinates_assembly;
