@@ -17,7 +17,6 @@ abaqus.rpy*
 *.cid
 *.lck
 *.mdl
-*.odb
 *.sim
 *.simdir/
 *.simlog
