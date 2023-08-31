@@ -23,3 +23,19 @@ abaqus.rpy*
 *.simlog
 *.stt
 
+# specific files that are to big:
+interlocking-3.odb
+interlocking-3.abq
+interlocking-2e.odb
+interlocking-2e.abq
+interlocking-3.pac
+interlocking-1l.odb
+interlocking-2c.abq
+interlocking-2d.abq
+interlocking-2d.odb
+interlocking-1m.odb
+interlocking-2c.odb
+interlocking-1m.abq
+interlocking-2.abq
+interlocking-2b.abq
+
