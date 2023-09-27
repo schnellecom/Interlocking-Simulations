@@ -32,3 +32,5 @@ abaqus.rpy*
 *.abq
 *.cae
 *.avi
+
+*.nfs*
