@@ -36,10 +36,10 @@ import sys
 sys.path.insert(6, 
     r'/usr/SIMULIA/EstProducts/2023/linux_a64/code/python2.7/lib/abaqus_plugins/stlImport')
 import stl2inp
-stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/interlocking-1a.stl', 
+stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/10x10/interlocking-1a.stl', 
     modelName=modelName, mergeNodesTolerance=1E-10)
 
-stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/frame-1a.stl', 
+stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/10x10/frame-1a.stl', 
     modelName=frameName, mergeNodesTolerance=1E-10)
 
 # remove old model
@@ -48,7 +48,12 @@ del mdb.models['Model-1']
 # create a material
 mdb.models[modelName].Material(name='high-strength')
 mdb.models[modelName].materials['high-strength'].Elastic(table=((
-    2000000000000.0, 0.3), ))
+    2100000000, 0.3), ))
+mdb.models[modelName].materials['high-strength'].Density(table=((700.0, ),
+    ))
+mdb.models[modelName].materials['high-strength'].Damping(alpha=0.01,
+    beta=0.0001)
+
 
 # convert the stl and supress the warning
 from abaqus import backwardCompatibility
@@ -80,101 +85,36 @@ a2.Instance(name=modelName, part=p, dependent=ON)
 a1 = mdb.models[modelName].rootAssembly
 del a1.features['PART-1-1']
 
-# move frame to right position
-# a2 = mdb.models[modelName].rootAssembly
-# a2.translate(instanceList=(frameName, ), vector=(-4.0, -4.0, 0.0))
-
 
 
 # p = mdb.models[modelName].parts['PART-1_geom']
 # f = p.faces
 # p.AddCells(faceList = f[0:24])
 
-# mdb.models[modelName].HomogeneousSolidSection(name='Section-1',
-#     material='high-strength', thickness=None)
-# p = mdb.models[modelName].parts['PART-1_geom']
-# c = p.cells
-# cells = c.getSequenceFromMask(mask=('[#3 ]', ), )
-# region = p.Set(cells=cells, name='Set-1')
-# p = mdb.models[modelName].parts['PART-1_geom']
-# p.SectionAssignment(region=region, sectionName='Section-1', offset=0.0,
-#     offsetType=MIDDLE_SURFACE, offsetField='',
-#     thicknessAssignment=FROM_SECTION)
+mdb.models[modelName].HomogeneousSolidSection(name='Section-1',
+    material='high-strength', thickness=None)
 
 # make a step
-# mdb.models[modelName].StaticStep(name='Step-1', previous='Initial')
+mdb.models['interlocking-1'].ExplicitDynamicsStep(name='Step-2',
+    previous='Initial', timePeriod=1.0, improvedDtMethod=ON)
 
-# set interactions
-# mdb.models[modelName].ContactProperty('IntProp-1')
-# mdb.models[modelName].interactionProperties['IntProp-1'].TangentialBehavior(
-#     formulation=FRICTIONLESS)
-# mdb.models[modelName].interactionProperties['IntProp-1'].NormalBehavior(
-#     pressureOverclosure=HARD, allowSeparation=ON,
-#     constraintEnforcementMethod=DEFAULT)
+# set interaction property
+mdb.models[modelName].ContactProperty('IntProp-1')
+mdb.models[modelName].interactionProperties['IntProp-1'].TangentialBehavior(
+    formulation=FRICTIONLESS)
+mdb.models[modelName].interactionProperties['IntProp-1'].NormalBehavior(
+    pressureOverclosure=EXPONENTIAL, table=((1.0, 0.0), (0.0, 9e-5)),
+    maxStiffness=None, constraintEnforcementMethod=DEFAULT)
 
-# delete old part
-# del mdb.models[modelName].parts['PART-1']
 
-# make assembly
-# a2 = mdb.models[modelName].rootAssembly
-# p = mdb.models[modelName].parts['PART-1_geom']
-# a2.Instance(name='PART-1_geom-1', part=p, dependent=ON)
+# create interaction from property
+mdb.models[modelName].ContactExp(name='Int-1', createStepName='Initial')
+mdb.models[modelName].interactions['Int-1'].includedPairs.setValuesInStep(
+    stepName='Initial', useAllstar=ON)
+mdb.models[modelName].interactions['Int-1'].contactPropertyAssignments.appendInStep(
+    stepName='Initial', assignments=((GLOBAL, SELF, 'IntProp-1'), ))
 
-# create load
-# a1 = mdb.models[modelName].rootAssembly
-# s1 = a1.instances['PART-1_geom-1'].faces
-# side1Faces1 = s1.findAt(((3.333333, 6.666667, 10.001), ), ((6.666667, 3.333333,
-#     10.001), ))
-# region = a1.Surface(side1Faces=side1Faces1, name='Surf-6')
-# mdb.models[modelName].Pressure(name='Load-2', createStepName='Step-1',
-#     region=region, distributionType=UNIFORM, field='', magnitude=100.0,
-#     amplitude=UNSET)
 
-# boundary conditions
-# a1 = mdb.models[modelName].rootAssembly
-# v1 = a1.instances['PART-1_geom-1'].vertices
-# verts1 = v1.findAt(((0.0, 10.0, 0.0), ), ((0.0, 0.0, 0.0), ), ((10.0, 0.0,
-#     0.0), ), ((10.0, 10.0, 0.0), ))
-# region = a1.Set(vertices=verts1, name='Set-2')
-# mdb.models[modelName].EncastreBC(name='BC-2', createStepName='Step-1',
-#     region=region, localCsys=None)
-
-# maybe fix movement of other part as well?
-# a1 = mdb.models['two-cubes'].rootAssembly
-# v1 = a1.instances['PART-1_geom-1'].vertices
-# verts1 = v1.getSequenceFromMask(mask=('[#f00 ]', ), )
-# region = a1.Set(vertices=verts1, name='Set-4')
-# mdb.models['two-cubes'].ZsymmBC(name='BC-3', createStepName='Step-1',
-#     region=region, localCsys=None)
-
-# mesh part
-# p = mdb.models[modelName].parts['PART-1_geom']
-# p.seedPart(size=1.0, deviationFactor=0.1, minSizeFactor=0.1)
-
-# change to tet mesh
-# p = mdb.models[modelName].parts['PART-1_geom']
-# c = p.cells
-# pickedRegions = c.findAt(((6.666667, 3.333333, 5.0), ), ((6.666667, 3.333333,
-#     10.001), ))
-# p.setMeshControls(regions=pickedRegions, elemShape=TET, technique=FREE)
-# elemType1 = mesh.ElemType(elemCode=C3D20R)
-# elemType2 = mesh.ElemType(elemCode=C3D15)
-# elemType3 = mesh.ElemType(elemCode=C3D10)
-# p = mdb.models[modelName].parts['PART-1_geom']
-# c = p.cells
-# cells = c.findAt(((6.666667, 3.333333, 5.0), ), ((6.666667, 3.333333, 10.001),
-#     ))
-# pickedRegions =(cells, )
-# p.setElementType(regions=pickedRegions, elemTypes=(elemType1, elemType2,
-#     elemType3))
-
-# mesh itself
-# p = mdb.models[modelName].parts['PART-1_geom']
-# p.generateMesh()
-# a = mdb.models[modelName].rootAssembly
-# a1 = mdb.models[modelName].rootAssembly
-# # a1.regenerate()
-# p = mdb.models[modelName].parts['PART-1_geom']
 
 # # create job
 # mdb.Job(name=jobName, model=modelName, description='', type=ANALYSIS,
