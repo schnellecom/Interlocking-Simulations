@@ -33,34 +33,27 @@ Mdb()
 
 # import the .stl
 import sys
-sys.path.insert(6, 
-    r'/usr/SIMULIA/EstProducts/2023/linux_a64/code/python2.7/lib/abaqus_plugins/stlImport')
+sys.path.insert(6, r'/usr/SIMULIA/EstProducts/2023/linux_a64/code/python2.7/lib/abaqus_plugins/stlImport')
 import stl2inp
-stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/10x10/interlocking-1a.stl', 
-    modelName=modelName, mergeNodesTolerance=1E-10)
+stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/10x10/interlocking-1a.stl', modelName=modelName, mergeNodesTolerance=1E-8)
 
-stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/10x10/frame-1a.stl', 
-    modelName=frameName, mergeNodesTolerance=1E-10)
+stl2inp.STL2inp(stlfile='/home/data/schnelle/Interlocking-Simulations/10x10/frame-1a.stl', modelName=frameName, mergeNodesTolerance=1E-8)
 
 # remove old model
 del mdb.models['Model-1']
 
 # create a material
 mdb.models[modelName].Material(name='high-strength')
-mdb.models[modelName].materials['high-strength'].Elastic(table=((
-    2100000000, 0.3), ))
-mdb.models[modelName].materials['high-strength'].Density(table=((700.0, ),
-    ))
-mdb.models[modelName].materials['high-strength'].Damping(alpha=0.01,
-    beta=0.0001)
+mdb.models[modelName].materials['high-strength'].Elastic(table=(( 2100000000, 0.3), ))
+mdb.models[modelName].materials['high-strength'].Density(table=((700.0, ), ))
+mdb.models[modelName].materials['high-strength'].Damping(alpha=0.01, beta=0.0001)
 
 
 # convert the stl and supress the warning
 from abaqus import backwardCompatibility
 backwardCompatibility.setValues(reportDeprecated=False)
-execfile('/home/data/schnelle/Interlocking-Simulations/abq3Dmesh2geom.py', __main__.__dict__)
-
-execfile('/home/data/schnelle/Interlocking-Simulations/abq3Dmesh2geom-frame.py', __main__.__dict__)
+execfile('/home/data/schnelle/Interlocking-Simulations/10x10/abq3Dmesh2geom.py', __main__.__dict__)
+execfile('/home/data/schnelle/Interlocking-Simulations/10x10/abq3Dmesh2geom-frame.py', __main__.__dict__)
 
 # combine models
 del mdb.models[frameName].parts['PART-1']
@@ -85,34 +78,21 @@ a2.Instance(name=modelName, part=p, dependent=ON)
 a1 = mdb.models[modelName].rootAssembly
 del a1.features['PART-1-1']
 
-
-
-# p = mdb.models[modelName].parts['PART-1_geom']
-# f = p.faces
-# p.AddCells(faceList = f[0:24])
-
-mdb.models[modelName].HomogeneousSolidSection(name='Section-1',
-    material='high-strength', thickness=None)
+mdb.models[modelName].HomogeneousSolidSection(name='Section-1', material='high-strength', thickness=None)
 
 # make a step
-mdb.models['interlocking-1'].ExplicitDynamicsStep(name='Step-2',
-    previous='Initial', timePeriod=1.0, improvedDtMethod=ON)
+mdb.models[modelName].ExplicitDynamicsStep(name='Step-1', previous='Initial', timePeriod=1.0, improvedDtMethod=ON)
 
 # set interaction property
 mdb.models[modelName].ContactProperty('IntProp-1')
-mdb.models[modelName].interactionProperties['IntProp-1'].TangentialBehavior(
-    formulation=FRICTIONLESS)
-mdb.models[modelName].interactionProperties['IntProp-1'].NormalBehavior(
-    pressureOverclosure=EXPONENTIAL, table=((1.0, 0.0), (0.0, 9e-5)),
-    maxStiffness=None, constraintEnforcementMethod=DEFAULT)
+mdb.models[modelName].interactionProperties['IntProp-1'].TangentialBehavior(formulation=FRICTIONLESS)
+mdb.models[modelName].interactionProperties['IntProp-1'].NormalBehavior(pressureOverclosure=EXPONENTIAL, table=((1.0, 0.0), (0.0, 9e-5)),maxStiffness=None, constraintEnforcementMethod=DEFAULT)
 
 
 # create interaction from property
 mdb.models[modelName].ContactExp(name='Int-1', createStepName='Initial')
-mdb.models[modelName].interactions['Int-1'].includedPairs.setValuesInStep(
-    stepName='Initial', useAllstar=ON)
-mdb.models[modelName].interactions['Int-1'].contactPropertyAssignments.appendInStep(
-    stepName='Initial', assignments=((GLOBAL, SELF, 'IntProp-1'), ))
+mdb.models[modelName].interactions['Int-1'].includedPairs.setValuesInStep(stepName='Initial', useAllstar=ON)
+mdb.models[modelName].interactions['Int-1'].contactPropertyAssignments.appendInStep(stepName='Initial', assignments=((GLOBAL, SELF, 'IntProp-1'), ))
 
 
 
