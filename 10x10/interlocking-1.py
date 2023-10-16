@@ -62,7 +62,7 @@ del mdb.models[modelName].parts['PART-1']
 mdb.models[frameName].parts.changeKey(fromName='PART-1_geom', toName='frame')
 mdb.models[modelName].parts.changeKey(fromName='PART-1_geom', toName='interlocking')
 
-mdb.models[modelName].Part('frame', mdb.models['f1'].parts['frame'])
+mdb.models[modelName].Part('frame', mdb.models[frameName].parts['frame'])
 
 del mdb.models[frameName]
 
