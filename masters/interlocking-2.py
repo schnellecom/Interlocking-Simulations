@@ -6,7 +6,7 @@ jobName = "versTrans2"
 interlockingName = "versTrans2"
 frameName = "frame2"
 
-modelName = "Model-versTrans2"
+modelName = "Model-1"
 
 from abaqus import *
 from abaqusConstants import *
