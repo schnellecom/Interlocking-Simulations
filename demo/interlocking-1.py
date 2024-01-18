@@ -45,14 +45,14 @@ Mdb()
 # del mdb.models['Model-1']
 
 step = mdb.openStep(
-    '/home/data/schnelle/Interlocking-Simulations/wall/interlocking-1a.step',
+    '/home/data/schnelle/Interlocking-Simulations/demo/DemonstatorBlocks.step',
     scaleFromFile=OFF)
 mdb.models[modelName].PartFromGeometryFile(name=interlockingName,
     geometryFile=step, combine=True, dimensionality=THREE_D,
     type=DEFORMABLE_BODY, scale=0.1)
 
 step = mdb.openStep(
-    '/home/data/schnelle/Interlocking-Simulations/wall/frame-1a.step',
+    '/home/data/schnelle/Interlocking-Simulations/demo/DemonstatorFrame.step',
     scaleFromFile=OFF)
 mdb.models[modelName].PartFromGeometryFile(name=frameName,
     geometryFile=step, combine=True, dimensionality=THREE_D,
